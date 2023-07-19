@@ -1,11 +1,12 @@
 <template lang="pug">
   .game-field
     .game-field__dashboard
-      p.game-field__text Category: {{ category }}
-      p.game-field__text Tries left: {{ maxAttempts - count }}
-      .game-field__hint
-        button.btn.is-link(v-if="!hint" type="button" title="It will takes two tries" @click="getHint") Get a hint
-        p.game-field__text(v-else) Hint: {{ hint }}
+      DashboardMain(
+        :category="category"
+        :word="word"
+        :attempts="leftAttempts"
+        :isFinished="isFinished"
+        @get-hint="getHint")
     .game-field__figure
       svg.game-field__svg(height='250' width='200' ref="svg")
         line.path(x1='20' y1='230' x2='100' y2='230' stroke-linecap="round")
@@ -14,24 +15,29 @@
         line.path(x1='140' y1='90' x2='140' y2='150')
         polyline.path(points='140,120 120,100 140,120 160,100')
         polyline.path(points='140,150 120,180 140,150 160,180')
-    .game-field__part
+    .game-field__block
       p.game-field__word(ref="answer")
         span(v-for="item in word" ) _
       - const alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',  'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
       ul.game-field__list
         each letter in alphabet
           li.game-field__item
-             button.btn.game-field__button(type="button" @click="guess")= letter
+             button.btn.game-field__button(type="button" @click="guess" :disabled="isFinished")= letter
 </template>
 
 <script>
 import service from '../../services/gameService'
+import ModalResultMain from '../modal/result/Main'
 
 export default {
   props: {
     category: {
       type: String,
       required: true
+    },
+    action: {
+      type: Function,
+      default: () => null
     }
   },
   data() {
@@ -39,14 +45,18 @@ export default {
       word: '',
       count: 0,
       maxAttempts: 6,
-      hint: ''
+      isFinished: false
+    }
+  },
+  computed: {
+    leftAttempts() {
+      return this.maxAttempts - this.count
     }
   },
   async mounted() {
     const words = await service.getWords(this.category)
     const randomIdx = Math.floor(Math.random() * words.length)
     this.word = words[randomIdx].word
-    console.log(this.word)
   },
   methods: {
     guess() {
@@ -55,10 +65,6 @@ export default {
       const answer = [...this.$refs.answer.childNodes]
       button.disabled = true
 
-      if (this.count === this.maxAttempts) {
-        return
-      }
-
       if (this.word.includes(letter)) {
         [...this.word].forEach((el, index) => {
           if (el === letter) {
@@ -66,27 +72,47 @@ export default {
           }
         })
       } else {
-        this.drawSvg()
         this.count++
+        this.drawSvg()
       }
+
+      this.checkState()
     },
     drawSvg() {
       const svg = [...this.$refs.svg.childNodes]
 
-      for (let i = 0; i <= this.count; i++) {
+      for (let i = 0; i < this.count; i++) {
         const path = svg[i]
         path.classList.add('animated')
       }
     },
-    async getHint() {
-      try {
-        const result = await service.getHint(this.word)
-        this.hint = result[0].meanings[0].definitions[0].definition
-        this.count++
-        this.drawSvg()
-      } catch (error) {
-        this.hint = 'Sorry pal, we couldn\'t find hint for this word.'
+    getHint() {
+      this.count += 2
+      this.drawSvg()
+    },
+    checkState() {
+      if (this.count === this.maxAttempts) {
+        this.isFinished = true
+        this.showModal('Thanks for playing! Please try again.')
       }
+
+      if (!this.$refs.answer.textContent.includes('_')) {
+        this.isFinished = true
+        this.showModal('Congratulations! You did it!')
+      }
+    },
+    showModal(title) {
+      this.$modal.show(ModalResultMain, {
+        title,
+        word: this.word,
+        action: this.action
+      }, {
+        height: 'auto',
+        adaptive: true,
+        width: 500,
+        scrollable: true,
+        pivotY: 0.50
+      })
     }
   }
 }
@@ -99,14 +125,10 @@ export default {
   flex-wrap: wrap;
 
   &__dashboard {
-    align-items: center;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
     width: 100%;
   }
 
-  &__part {
+  &__block {
     width: 45%;
   }
 
@@ -139,17 +161,6 @@ export default {
     }
   }
 
-  &__text {
-    color: $color-white;
-    font-size: 2rem;
-    margin-right: 20px;
-  }
-
-  &__hint {
-    margin-top: 10px;
-    width: 100%;
-  }
-
   &__svg {
     transform: scale(1.7);
 
@@ -164,12 +175,6 @@ export default {
     .animated {
       animation: dash 5s linear;
       animation-fill-mode: forwards;
-    }
-  }
-
-  @keyframes dash {
-    to {
-      stroke-dashoffset: 0;
     }
   }
 }

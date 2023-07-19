@@ -3,14 +3,12 @@
 </template>
 
 <script>
-import ModalMain from '../modal/Main'
+import ModalAboutMain from '../modal/about/Main'
 
 export default {
   methods: {
     showModal() {
-      this.$modal.show(ModalMain, {
-        title: 'About'
-      }, {
+      this.$modal.show(ModalAboutMain, {}, {
         height: 'auto',
         adaptive: true,
         width: 500,

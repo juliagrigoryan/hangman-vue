@@ -1,10 +1,9 @@
 <template lang="pug">
-  .category
-    template(v-if="categories.length")
-      h2.category__title Choose a category:
-      ul.category__list
-        li.category__item(v-for="category in categories" :key="category")
-          button.btn.category__button(type="button" @click="selectCategory(category)") {{ category }}
+  .category(v-if="categories.length")
+    h2.category__title Choose a category:
+    ul.category__list
+      li.category__item(v-for="category in categories" :key="category")
+        button.btn.category__button(type="button" @click="selectCategory(category)") {{ category }}
 </template>
 
 <script>

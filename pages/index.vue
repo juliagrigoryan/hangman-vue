@@ -2,12 +2,12 @@
   main.main
     .main__container
       h1.main__title Hangman
-      template(v-if="!selectedCategory")
+      .main__category(v-if="!selectedCategory")
         CategoryMain(@select-category="selectCategory")
         .main__about
           AboutMain
       template(v-else)
-        GameFieldMain(:category="selectedCategory")
+        GameFieldMain(:category="selectedCategory" :action="resetGame")
 </template>
 
 <script>
@@ -20,6 +20,9 @@ export default {
   methods: {
     selectCategory(category) {
       this.selectedCategory = category
+    },
+    resetGame() {
+      this.selectedCategory = ''
     }
   }
 }

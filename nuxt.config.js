@@ -62,7 +62,8 @@ export default {
       './assets/scss/base.scss',
       './assets/scss/mixins.scss',
       './assets/scss/animation.scss',
-      './assets/scss/button.scss'
+      './assets/scss/button.scss',
+      './assets/scss/modal.scss'
     ]
   },
 
