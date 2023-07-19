@@ -1,0 +1,45 @@
+.btn {
+  @include trs;
+  background-color: rgba($color-white, 50%);
+  border: 2px solid $color-1--1;
+  border-radius: 6px;
+  color: $color-black;
+  cursor: pointer;
+  font-size: 2rem;
+  padding: 0.8em 1.2em;
+
+  @include on-event {
+    background-color: $color-1--1;
+  }
+
+  &.is-primary {
+    background-color: $color-1--1;
+
+    @include on-event {
+      background-color: transparent;
+    }
+  }
+
+  &.is-rounded {
+    border-radius: 50%;
+  }
+
+  &.is-link {
+    background-color: transparent;
+    border: 0;
+    color: $color-white;
+    padding: 0;
+    text-decoration: underline;
+
+    @include on-event {
+      color: $color-1--1;
+      text-decoration: none;
+    }
+  }
+
+  &[disabled] {
+    border-color: transparent;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
