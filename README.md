@@ -1,5 +1,7 @@
 # hangman-vue
 
+[Demo page](https://juliagrigoryan.github.io/hangman-vue/)
+
 ## Build Setup
 
 ```bash
@@ -35,13 +37,6 @@ The components directory contains your Vue.js components. Components make up the
 
 More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/components).
 
-### `layouts`
-
-Layouts are a great help when you want to change the look and feel of your Nuxt app, whether you want to include a sidebar or have distinct layouts for mobile and desktop.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/layouts).
-
-
 ### `pages`
 
 This directory contains your application views and routes. Nuxt will read all the `*.vue` files inside this directory and setup Vue Router automatically.
@@ -61,9 +56,3 @@ This directory contains your static files. Each file inside this directory is ma
 Example: `/static/robots.txt` is mapped as `/robots.txt`.
 
 More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/static).
-
-### `store`
-
-This directory contains your Vuex store files. Creating a file in this directory automatically activates Vuex.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/store).
