@@ -6,7 +6,7 @@ export default {
   target: 'static',
 
   router: {
-    base: '/'
+    base: '/hangman-vue/'
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
